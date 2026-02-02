@@ -1,133 +1,140 @@
-# Kubernetes Scheduler - Next Release Roadmap
+# Kubernetes Scheduler - Top 10 Priority Issues
 
-**Updated:** 2026-02-02 16:03:07
+**Updated:** 2026-02-02 16:25:32
 **Source:** kubernetes/kubernetes (sig/scheduling)
 **Total Open Issues:** 100
+**Showing:** Top 10 highest priority
 
 ---
 
-## 📊 Quick Stats
+## 🎯 Critical Focus Areas
 
-| Priority | Count | Status |
-|----------|-------|--------|
-| 🔴 Critical |        0 | Blockers - Must resolve |
-| 🟠 High |       30 | Target for next release |
-| 🟡 Medium |       51 | Nice to have |
-| 🟢 Low |       19 | Future consideration |
-
-**By Type:** 0 Bugs · 100 Features/Other
+The following issues represent the highest priority items for SIG Scheduling based on:
+- Priority labels (critical-urgent, important-soon)
+- Issue type (bugs, regressions)
+- Impact keywords (crash, broken, not working)
+- Issue age and community attention
 
 ---
 
-## 🎯 Release Priorities
+## 📋 Top 10 Issues
 
-### Must Address (Critical + High Priority)
 
-#### 🟠 High Priority (      30)
-**Target:** Complete for next release
+### 1. 🔴 [#72593](https://github.com/kubernetes/kubernetes/issues/72593)
 
-- [#136261](https://github.com/kubernetes/kubernetes/issues/136261) Failure cluster [db1839c4...] TestUnReservePreBindPlugins flaking
-- [#135771](https://github.com/kubernetes/kubernetes/issues/135771) NominatedNodeName is cleared on Bind failure leading to unschedulable pods
-- [#134972](https://github.com/kubernetes/kubernetes/issues/134972) Inaccurate metric scheduler_plugin_execution_duration_seconds in large cluster
-- [#134859](https://github.com/kubernetes/kubernetes/issues/134859) External binding on a pod that is in scheduling, may not wake up unschedulable pods
-- [#134810](https://github.com/kubernetes/kubernetes/issues/134810) TopologySpreadConstraint not acting well When multiple deployments rollout at same time
-- [#134534](https://github.com/kubernetes/kubernetes/issues/134534) Pod affinity implementation with multiple rules does not match documentation
-- [#133529](https://github.com/kubernetes/kubernetes/issues/133529) Scheduler does not consider pod-deletion-cost during rollout, leading to pod imbalance
-- [#131209](https://github.com/kubernetes/kubernetes/issues/131209) plugin execution metric buckets are not useful for debugging high latency plugins
-- [#131171](https://github.com/kubernetes/kubernetes/issues/131171) DaemonSets should be scheduled before Deployments on new Nodes
-- [#130784](https://github.com/kubernetes/kubernetes/issues/130784) [Bug] Pod not scheduled although there is a node matching all hard pod affinity terms
-- [#128684](https://github.com/kubernetes/kubernetes/issues/128684) No overflow validation when using MilliValue()
-- [#128233](https://github.com/kubernetes/kubernetes/issues/128233) controllers: Check if informers are synced on `/healthz`/`/readyz`?
-- [#127384](https://github.com/kubernetes/kubernetes/issues/127384) Scheduler perf incorrectly shows percentiles for fast metrics
-- [#126202](https://github.com/kubernetes/kubernetes/issues/126202) integration tests are painfully slow
-- [#125426](https://github.com/kubernetes/kubernetes/issues/125426) ExtendedResourceToleration adds tolerations even when the quantity of requested resources is "0"
-- [#120395](https://github.com/kubernetes/kubernetes/issues/120395) scheduler: fix and test "unschedulable_pods" metric
-- [#117983](https://github.com/kubernetes/kubernetes/issues/117983) Re-think volumezone plugin
-- [#116629](https://github.com/kubernetes/kubernetes/issues/116629) TopologySpreadConstraints - Scaling Pods during rolling updates can cause pods to be stuck in Pending
-- [#113705](https://github.com/kubernetes/kubernetes/issues/113705) VolumeBinding's Score plugin in enabled by default in v1beta3 and v1 config
-- [#113293](https://github.com/kubernetes/kubernetes/issues/113293) Pod quota is not released in time when node lost
-- [#102231](https://github.com/kubernetes/kubernetes/issues/102231) replace klog.Fatal and os.Exit for defer funcs
-- [#95911](https://github.com/kubernetes/kubernetes/issues/95911) When a new node joins the cluster - scheduler doesn't respect CSI volume limit
-- [#93505](https://github.com/kubernetes/kubernetes/issues/93505) race condition detected during the scheduling with preemption 
-- [#91492](https://github.com/kubernetes/kubernetes/issues/91492) Priority-based preemption can easily violate PDBs even when unnecessary due to multiple issues with the implementation
-- [#83323](https://github.com/kubernetes/kubernetes/issues/83323) Scheduler does not prioritize volume sizes
-- [#74405](https://github.com/kubernetes/kubernetes/issues/74405) Tight retry loops should not cause cascading failure of the cluster
-- [#72593](https://github.com/kubernetes/kubernetes/issues/72593) ReplicaSet controller continuously creating pods failing due to SysctlForbidden
-- [#72479](https://github.com/kubernetes/kubernetes/issues/72479) Rethink pod affinity/anti-affinity
-- [#70864](https://github.com/kubernetes/kubernetes/issues/70864) ValidatingWebhookConfiguration causes deployments to maintain two underlying RS at the same time
-- [#66525](https://github.com/kubernetes/kubernetes/issues/66525) Kubelet should add a label to nodes on which CPU manager is running
+**ReplicaSet controller continuously creating pods failing due to SysctlForbidden**
+
+- **Priority:** CRITICAL (Score: 1000)
+- **Labels:** kind/bug, priority/important-soon, area/kubelet, sig/scheduling, area/reliability, kind/feature, sig/apps, lifecycle/frozen
+- **Action:** Review and assign owner
+
+
+### 2. 🔴 [#70864](https://github.com/kubernetes/kubernetes/issues/70864)
+
+**ValidatingWebhookConfiguration causes deployments to maintain two underlying RS at the same time**
+
+- **Priority:** CRITICAL (Score: 1000)
+- **Labels:** kind/bug, priority/important-soon, sig/scheduling, sig/apps, lifecycle/frozen
+- **Action:** Review and assign owner
+
+
+### 3. 🔴 [#74405](https://github.com/kubernetes/kubernetes/issues/74405)
+
+**Tight retry loops should not cause cascading failure of the cluster**
+
+- **Priority:** CRITICAL (Score: 800)
+- **Labels:** priority/important-soon, sig/scheduling, area/reliability, sig/api-machinery, kind/feature, sig/apps, sig/architecture, lifecycle/frozen
+- **Action:** Review and assign owner
+
+
+### 4. 🟠 [#72479](https://github.com/kubernetes/kubernetes/issues/72479)
+
+**Rethink pod affinity/anti-affinity**
+
+- **Priority:** HIGH (Score: 700)
+- **Labels:** priority/important-soon, sig/scalability, sig/scheduling, kind/feature, lifecycle/frozen
+- **Action:** Review and assign owner
+
+
+### 5. 🟠 [#120395](https://github.com/kubernetes/kubernetes/issues/120395)
+
+**scheduler: fix and test "unschedulable_pods" metric**
+
+- **Priority:** HIGH (Score: 600)
+- **Labels:** kind/bug, sig/scheduling, lifecycle/frozen, needs-triage
+- **Action:** Review and assign owner
+
+
+### 6. 🟠 [#93505](https://github.com/kubernetes/kubernetes/issues/93505)
+
+**race condition detected during the scheduling with preemption **
+
+- **Priority:** HIGH (Score: 500)
+- **Labels:** kind/bug, sig/scheduling, lifecycle/frozen
+- **Action:** Review and assign owner
+
+
+### 7. 🟠 [#91492](https://github.com/kubernetes/kubernetes/issues/91492)
+
+**Priority-based preemption can easily violate PDBs even when unnecessary due to multiple issues with the implementation**
+
+- **Priority:** HIGH (Score: 500)
+- **Labels:** kind/bug, sig/scheduling, lifecycle/frozen
+- **Action:** Review and assign owner
+
+
+### 8. 🟠 [#128233](https://github.com/kubernetes/kubernetes/issues/128233)
+
+**controllers: Check if informers are synced on `/healthz`/`/readyz`?**
+
+- **Priority:** HIGH (Score: 500)
+- **Labels:** kind/bug, sig/scheduling, sig/apps, lifecycle/rotten, needs-triage
+- **Action:** Review and assign owner
+
+
+### 9. 🟠 [#117983](https://github.com/kubernetes/kubernetes/issues/117983)
+
+**Re-think volumezone plugin**
+
+- **Priority:** HIGH (Score: 500)
+- **Labels:** kind/bug, sig/scheduling, sig/storage, triage/accepted
+- **Action:** Review and assign owner
+
+
+### 10. 🟠 [#116629](https://github.com/kubernetes/kubernetes/issues/116629)
+
+**TopologySpreadConstraints - Scaling Pods during rolling updates can cause pods to be stuck in Pending**
+
+- **Priority:** HIGH (Score: 500)
+- **Labels:** kind/bug, sig/scheduling, needs-triage
+- **Action:** Review and assign owner
 
 
 ---
 
-## 💡 Good to Have (Medium Priority)
+## 📊 Statistics
 
-**Count:**       51 issues
-
-- [#136609](https://github.com/kubernetes/kubernetes/issues/136609) [Scheduler] Add an extension after PostFilter that will always execute
-- [#136422](https://github.com/kubernetes/kubernetes/issues/136422) Export `validateAffinity()` as `ValidateAffinity()` for external validation consistency
-- [#135900](https://github.com/kubernetes/kubernetes/issues/135900) SchedulerAsyncAPICalls can lead to performance issues.
-- [#136207](https://github.com/kubernetes/kubernetes/issues/136207) Workload API gaps for disaggregated/multi-component inference workloads
-- [#135528](https://github.com/kubernetes/kubernetes/issues/135528) Improve efficiency of requeuing unschedulable pods when a pod is added for gang scheduling
-- [#135493](https://github.com/kubernetes/kubernetes/issues/135493) DRA: DBC - scheduler behavior after binding failure
-- [#135475](https://github.com/kubernetes/kubernetes/issues/135475) DRA: DBC - metrics for production readiness
-- [#135474](https://github.com/kubernetes/kubernetes/issues/135474) DRA: DBC - gather feedback from DRA driver developers
-- [#135473](https://github.com/kubernetes/kubernetes/issues/135473) DRA: DBC - happy path without binding failure in device attachment scenario
-- [#135472](https://github.com/kubernetes/kubernetes/issues/135472) DRA: [Umbrella] Device Binding Conditions (DBC) beta
-- [#135159](https://github.com/kubernetes/kubernetes/issues/135159) Support update multi conditions in one API call when scheduling.
-- [#134428](https://github.com/kubernetes/kubernetes/issues/134428) improved preemption logic for the kubernetes scheduler
-- [#134261](https://github.com/kubernetes/kubernetes/issues/134261) Run some scheduler_perf workloads with lowered kube-apiserver performance
-- [#133994](https://github.com/kubernetes/kubernetes/issues/133994) Move in-tree plugins to the staging repository
-- [#133819](https://github.com/kubernetes/kubernetes/issues/133819) Add support for tracing in scheduler
-- ... and 36 more medium priority issues
+- **Total sig/scheduling issues:** 100
+- **Filtered to top:** 10 issues
+- **Analysis method:** Priority labels + type + keywords + age
 
 ---
 
-## 📅 Release Timeline
+## 🎬 Recommended Actions
 
-### Phase 1: Critical Resolution (Weeks 1-2)
-- Triage and assign all critical issues
-- Begin work on high-priority bugs
-- **Goal:** Zero critical blockers
-
-### Phase 2: Feature Development (Weeks 3-5)
-- Implement high-priority features
-- Continue bug fixes
-- **Goal:** Complete must-have features
-
-### Phase 3: Stabilization (Weeks 6-8)
-- Code review and testing
-- Address medium-priority items if time permits
-- Documentation and release prep
-- **Goal:** Production-ready release
-
----
-
-## 🎬 Next Actions
-
-1. **Immediate:** Review and assign owners to critical issues
-2. **This Week:** Create detailed implementation plans for high-priority items
-3. **Ongoing:** Monitor new issues and adjust priorities
-
----
-
-## 📈 Trend Analysis
-
-- **Critical Issues:**        0 (Requires immediate attention)
-- **Release-blocking:** 30 issues total
-- **Estimated Effort:** Based on 100 open issues
-
-**Recommendation:**        0 critical issue(s) must be resolved before release. Focus team on high-priority bugs first, then features.
+1. **Immediate:** Assign owners to top 3 issues
+2. **This Week:** Create implementation plans for top 5
+3. **This Sprint:** Target completion of top 10
 
 ---
 
 ## 🔗 Resources
 
-- [Full Issue List](https://github.com/kubernetes/kubernetes/issues?q=is%3Aopen+is%3Aissue+label%3Asig%2Fscheduling)
-- [SIG Scheduling](https://github.com/kubernetes/community/tree/master/sig-scheduling)
+- [All sig/scheduling Issues](https://github.com/kubernetes/kubernetes/issues?q=is%3Aopen+is%3Aissue+label%3Asig%2Fscheduling)
+- [SIG Scheduling Community](https://github.com/kubernetes/community/tree/master/sig-scheduling)
 - [Kubernetes Contributor Guide](https://github.com/kubernetes/community/tree/master/contributors/guide)
 
 ---
 
-*Auto-generated roadmap tracking sig/scheduling issues. Updates every 10 seconds.*
-*Showing top priority items. Low priority issues (      19) tracked but not listed for brevity.*
+*This roadmap is automatically updated every 10 seconds to reflect the top 10 priority issues.*
+*Last updated: 2026-02-02 16:25:32*
