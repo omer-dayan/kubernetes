@@ -1,9 +1,9 @@
-name: Update Scheduler Roadmap
+name: Update Scheduler Roadmap with AI Analysis
 
 on:
   schedule:
-    # Run every hour
-    - cron: '0 * * * *'
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
   workflow_dispatch:  # Allow manual trigger from GitHub UI
   push:
     branches:
@@ -23,173 +23,67 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch and analyze sig/scheduling issues
+      - name: Fetch sig/scheduling issues
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "🔍 Fetching sig/scheduling issues from kubernetes/kubernetes..."
 
-          # Fetch issues from kubernetes/kubernetes
           gh issue list \
             --repo kubernetes/kubernetes \
             --state open \
             --label "sig/scheduling" \
             --limit 100 \
-            --json number,title,url,body,labels,createdAt > /tmp/issues.json
+            --json number,title,url,body,labels,createdAt,updatedAt > /tmp/issues.json
 
           TOTAL_ISSUES=$(jq '. | length' /tmp/issues.json)
           echo "Found $TOTAL_ISSUES sig/scheduling issues"
 
-          # Calculate priority scores and sort
-          echo "📊 Analyzing and prioritizing issues..."
+          # Create a concise summary for Claude
+          jq -r '.[] | "Issue #\(.number): \(.title)\nLabels: \([.labels[]?.name] | join(", "))\nCreated: \(.createdAt)\nURL: \(.url)\nDescription: \(.body // "No description" | split("\n") | .[0:5] | join(" "))\n---"' \
+            /tmp/issues.json > /tmp/issues_summary.txt
 
-          jq -c '.[]' /tmp/issues.json | while IFS= read -r issue; do
-            number=$(echo "$issue" | jq -r '.number')
-            title=$(echo "$issue" | jq -r '.title')
-            url=$(echo "$issue" | jq -r '.url')
-            labels=$(echo "$issue" | jq -r '[.labels[]?.name] | join(", ")')
-            created=$(echo "$issue" | jq -r '.createdAt')
-            body=$(echo "$issue" | jq -r '.body // ""')
+          echo "✅ Issues fetched and summarized"
 
-            # Calculate priority score
-            score=0
-
-            # Priority labels
-            if echo "$labels" | grep -q "priority/critical-urgent"; then
-              score=$((score + 1000))
-            elif echo "$labels" | grep -q "priority/important-soon"; then
-              score=$((score + 500))
-            elif echo "$labels" | grep -q "priority/important-longterm"; then
-              score=$((score + 200))
-            fi
-
-            # Kind labels
-            if echo "$labels" | grep -q "kind/regression"; then
-              score=$((score + 400))
-            elif echo "$labels" | grep -q "kind/bug"; then
-              score=$((score + 300))
-            fi
-
-            # Keywords
-            text=$(echo "$title $body" | tr '[:upper:]' '[:lower:]')
-            if echo "$text" | grep -qE "crash|panic|broken"; then
-              score=$((score + 250))
-            elif echo "$text" | grep -qE "not work|fail|error"; then
-              score=$((score + 150))
-            fi
-
-            # Output: score|number|title|url|labels
-            echo "${score}|${number}|${title}|${url}|${labels}"
-          done | sort -t'|' -k1 -nr > /tmp/scored_issues.txt
-
-          echo "✅ Analysis complete"
-
-      - name: Generate roadmap
+      - name: Analyze issues with Claude AI
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          echo "📝 Generating roadmap..."
-          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          echo "🤖 Analyzing issues with Claude AI..."
+
           TOTAL_ISSUES=$(jq '. | length' /tmp/issues.json)
+          ISSUES_SUMMARY=$(cat /tmp/issues_summary.txt)
 
-          cat > roadmap.md << 'ROADMAP_HEADER'
-          # Kubernetes Scheduler - Top 10 Priority Issues
+          # Call Claude API
+          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+            -H "content-type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d @- << EOF
+          {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 4096,
+            "messages": [{
+              "role": "user",
+              "content": "You are analyzing Kubernetes scheduler issues labeled with sig/scheduling. There are $TOTAL_ISSUES open issues.\n\nYour task:\n1. Analyze ALL issues for dependencies and relationships\n2. Identify which issues block or unblock others\n3. Determine the top 10 most critical issues based on:\n   - Technical impact\n   - Dependencies (issues that unblock many others)\n   - Priority labels\n   - Issue severity\n4. Create a strategic roadmap\n\nIssues to analyze:\n\n$ISSUES_SUMMARY\n\nProvide your response in this EXACT markdown format:\n\n# Kubernetes Scheduler - Strategic Roadmap\n\n**AI Analysis Date:** [current date]\n**Total Issues Analyzed:** $TOTAL_ISSUES\n**Analysis Model:** Claude Sonnet 4.5\n\n---\n\n## 🎯 Executive Summary\n\n[2-3 sentence overview of the scheduler's current state and key challenges]\n\n---\n\n## 📊 Dependency Analysis\n\n[Brief explanation of key dependencies discovered]\n\n---\n\n## 🔥 Top 10 Strategic Priorities\n\n[For each of top 10 issues, format as:]\n\n### 1. [Emoji] Issue #[number]: [Title]\n\n**Priority Level:** [Critical/High/Medium]\n**Impact:** [Describe technical impact]\n**Dependencies:** [List issues this blocks/unblocks]\n**Strategic Value:** [Why this is prioritized]\n**Recommended Action:** [Specific next step]\n**URL:** [issue url]\n\n---\n\n[Repeat for issues 2-10]\n\n---\n\n## 🗺️ Implementation Roadmap\n\n### Phase 1: Foundation (Weeks 1-2)\n[Issues that unblock others - list with rationale]\n\n### Phase 2: Core Features (Weeks 3-5)\n[Main feature work that depends on Phase 1]\n\n### Phase 3: Optimization (Weeks 6-8)\n[Polish and optimization work]\n\n---\n\n## 🔗 Issue Relationships\n\n[Describe key relationships between issues, dependencies discovered]\n\n---\n\n## 💡 Strategic Recommendations\n\n1. [Key recommendation 1]\n2. [Key recommendation 2]\n3. [Key recommendation 3]\n\n---\n\n*This roadmap was generated using Claude AI analysis of sig/scheduling issues.*\n*For full issue list: https://github.com/kubernetes/kubernetes/issues?q=is%3Aopen+is%3Aissue+label%3Asig%2Fscheduling*"
+            }]
+          }
+          EOF
+          )
 
-          **Updated:** TIMESTAMP_PLACEHOLDER
-          **Source:** kubernetes/kubernetes (sig/scheduling)
-          **Total Open Issues:** TOTAL_ISSUES_PLACEHOLDER
-          **Showing:** Top 10 highest priority
+          # Extract the content from Claude's response
+          echo "$RESPONSE" | jq -r '.content[0].text' > roadmap.md
 
-          ---
+          # Check if generation was successful
+          if [ ! -s roadmap.md ]; then
+            echo "❌ Failed to generate roadmap with Claude"
+            echo "Response: $RESPONSE"
+            exit 1
+          fi
 
-          ## 🎯 Critical Focus Areas
+          echo "✅ AI analysis complete"
 
-          The following issues represent the highest priority items for SIG Scheduling based on:
-          - Priority labels (critical-urgent, important-soon)
-          - Issue type (bugs, regressions)
-          - Impact keywords (crash, broken, not working)
-          - Issue age and community attention
-
-          ---
-
-          ## 📋 Top 10 Issues
-
-          ROADMAP_HEADER
-
-          # Replace placeholders
-          sed -i "s/TIMESTAMP_PLACEHOLDER/$TIMESTAMP/" roadmap.md
-          sed -i "s/TOTAL_ISSUES_PLACEHOLDER/$TOTAL_ISSUES/" roadmap.md
-
-          # Add top 10 issues
-          rank=1
-          head -10 /tmp/scored_issues.txt | while IFS='|' read -r score number title url labels; do
-            # Determine priority
-            if [ $score -ge 800 ]; then
-              emoji="🔴"
-              priority="CRITICAL"
-            elif [ $score -ge 400 ]; then
-              emoji="🟠"
-              priority="HIGH"
-            elif [ $score -ge 200 ]; then
-              emoji="🟡"
-              priority="MEDIUM"
-            else
-              emoji="🟢"
-              priority="LOW"
-            fi
-
-            cat >> roadmap.md << ISSUE_BLOCK
-
-          ### ${rank}. ${emoji} [#${number}](${url})
-
-          **${title}**
-
-          - **Priority:** ${priority} (Score: ${score})
-          - **Labels:** ${labels}
-          - **Action:** Review and assign owner
-
-          ISSUE_BLOCK
-
-            rank=$((rank + 1))
-          done
-
-          # Add footer
-          cat >> roadmap.md << 'ROADMAP_FOOTER'
-
-          ---
-
-          ## 📊 Statistics
-
-          - **Total sig/scheduling issues:** TOTAL_ISSUES_PLACEHOLDER
-          - **Filtered to top:** 10 issues
-          - **Analysis method:** Priority labels + type + keywords + age
-
-          ---
-
-          ## 🎬 Recommended Actions
-
-          1. **Immediate:** Assign owners to top 3 issues
-          2. **This Week:** Create implementation plans for top 5
-          3. **This Sprint:** Target completion of top 10
-
-          ---
-
-          ## 🔗 Resources
-
-          - [All sig/scheduling Issues](https://github.com/kubernetes/kubernetes/issues?q=is%3Aopen+is%3Aissue+label%3Asig%2Fscheduling)
-          - [SIG Scheduling Community](https://github.com/kubernetes/community/tree/master/sig-scheduling)
-          - [Kubernetes Contributor Guide](https://github.com/kubernetes/community/tree/master/contributors/guide)
-
-          ---
-
-          *This roadmap is automatically updated every hour by GitHub Actions.*
-          *Last updated: TIMESTAMP_PLACEHOLDER*
-          ROADMAP_FOOTER
-
-          sed -i "s/TOTAL_ISSUES_PLACEHOLDER/$TOTAL_ISSUES/g" roadmap.md
-          sed -i "s/TIMESTAMP_PLACEHOLDER/$TIMESTAMP/g" roadmap.md
-
-          echo "✅ Roadmap generated"
-
-      - name: Commit and push changes
+      - name: Commit and push roadmap
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -200,11 +94,15 @@ jobs:
             echo "ℹ️  No changes to commit"
           else
             TOTAL_ISSUES=$(jq '. | length' /tmp/issues.json)
-            git commit -m "Update roadmap: Top 10 priority sig/scheduling issues
+            git commit -m "Update roadmap: AI-analyzed strategic priorities
 
-          Automated priority analysis of $TOTAL_ISSUES open issues.
+          Claude AI analysis of $TOTAL_ISSUES sig/scheduling issues including:
+          - Dependency analysis
+          - Issue relationships
+          - Strategic prioritization
+          - Implementation roadmap
 
-          Co-Authored-By: GitHub Actions <github-actions[bot]@users.noreply.github.com>"
+          Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
 
             git push
             echo "✅ Roadmap pushed to repository"
