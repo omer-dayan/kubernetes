@@ -1,6 +1,6 @@
 # Kubernetes Scheduler - Top 10 Priority Issues
 
-**Updated:** 2026-02-02 16:25:32
+**Updated:** 2026-02-02 14:29:27 UTC
 **Source:** kubernetes/kubernetes (sig/scheduling)
 **Total Open Issues:** 100
 **Showing:** Top 10 highest priority
@@ -24,7 +24,7 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 **ReplicaSet controller continuously creating pods failing due to SysctlForbidden**
 
-- **Priority:** CRITICAL (Score: 1000)
+- **Priority:** CRITICAL (Score: 950)
 - **Labels:** kind/bug, priority/important-soon, area/kubelet, sig/scheduling, area/reliability, kind/feature, sig/apps, lifecycle/frozen
 - **Action:** Review and assign owner
 
@@ -33,16 +33,16 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 **ValidatingWebhookConfiguration causes deployments to maintain two underlying RS at the same time**
 
-- **Priority:** CRITICAL (Score: 1000)
+- **Priority:** CRITICAL (Score: 950)
 - **Labels:** kind/bug, priority/important-soon, sig/scheduling, sig/apps, lifecycle/frozen
 - **Action:** Review and assign owner
 
 
-### 3. 🔴 [#74405](https://github.com/kubernetes/kubernetes/issues/74405)
+### 3. 🟠 [#74405](https://github.com/kubernetes/kubernetes/issues/74405)
 
 **Tight retry loops should not cause cascading failure of the cluster**
 
-- **Priority:** CRITICAL (Score: 800)
+- **Priority:** HIGH (Score: 750)
 - **Labels:** priority/important-soon, sig/scheduling, area/reliability, sig/api-machinery, kind/feature, sig/apps, sig/architecture, lifecycle/frozen
 - **Action:** Review and assign owner
 
@@ -51,7 +51,7 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 **Rethink pod affinity/anti-affinity**
 
-- **Priority:** HIGH (Score: 700)
+- **Priority:** HIGH (Score: 650)
 - **Labels:** priority/important-soon, sig/scalability, sig/scheduling, kind/feature, lifecycle/frozen
 - **Action:** Review and assign owner
 
@@ -60,7 +60,7 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 **scheduler: fix and test "unschedulable_pods" metric**
 
-- **Priority:** HIGH (Score: 600)
+- **Priority:** HIGH (Score: 550)
 - **Labels:** kind/bug, sig/scheduling, lifecycle/frozen, needs-triage
 - **Action:** Review and assign owner
 
@@ -69,7 +69,7 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 **race condition detected during the scheduling with preemption **
 
-- **Priority:** HIGH (Score: 500)
+- **Priority:** HIGH (Score: 450)
 - **Labels:** kind/bug, sig/scheduling, lifecycle/frozen
 - **Action:** Review and assign owner
 
@@ -78,35 +78,35 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 **Priority-based preemption can easily violate PDBs even when unnecessary due to multiple issues with the implementation**
 
-- **Priority:** HIGH (Score: 500)
+- **Priority:** HIGH (Score: 450)
 - **Labels:** kind/bug, sig/scheduling, lifecycle/frozen
 - **Action:** Review and assign owner
 
 
-### 8. 🟠 [#128233](https://github.com/kubernetes/kubernetes/issues/128233)
+### 8. 🟠 [#135771](https://github.com/kubernetes/kubernetes/issues/135771)
+
+**NominatedNodeName is cleared on Bind failure leading to unschedulable pods**
+
+- **Priority:** HIGH (Score: 450)
+- **Labels:** kind/bug, sig/scheduling, sig/storage, needs-triage
+- **Action:** Review and assign owner
+
+
+### 9. 🟠 [#128233](https://github.com/kubernetes/kubernetes/issues/128233)
 
 **controllers: Check if informers are synced on `/healthz`/`/readyz`?**
 
-- **Priority:** HIGH (Score: 500)
+- **Priority:** HIGH (Score: 450)
 - **Labels:** kind/bug, sig/scheduling, sig/apps, lifecycle/rotten, needs-triage
 - **Action:** Review and assign owner
 
 
-### 9. 🟠 [#117983](https://github.com/kubernetes/kubernetes/issues/117983)
+### 10. 🟠 [#117983](https://github.com/kubernetes/kubernetes/issues/117983)
 
 **Re-think volumezone plugin**
 
-- **Priority:** HIGH (Score: 500)
+- **Priority:** HIGH (Score: 450)
 - **Labels:** kind/bug, sig/scheduling, sig/storage, triage/accepted
-- **Action:** Review and assign owner
-
-
-### 10. 🟠 [#116629](https://github.com/kubernetes/kubernetes/issues/116629)
-
-**TopologySpreadConstraints - Scaling Pods during rolling updates can cause pods to be stuck in Pending**
-
-- **Priority:** HIGH (Score: 500)
-- **Labels:** kind/bug, sig/scheduling, needs-triage
 - **Action:** Review and assign owner
 
 
@@ -136,5 +136,5 @@ The following issues represent the highest priority items for SIG Scheduling bas
 
 ---
 
-*This roadmap is automatically updated every 10 seconds to reflect the top 10 priority issues.*
-*Last updated: 2026-02-02 16:25:32*
+*This roadmap is automatically updated every hour by GitHub Actions.*
+*Last updated: 2026-02-02 14:29:27 UTC*
